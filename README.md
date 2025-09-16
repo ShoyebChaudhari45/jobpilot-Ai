@@ -26,17 +26,8 @@ JobPilot AI is a Flask-based tool that helps you **find HR/recruiter emails** of
 
 ---
 
-## 📂 Project Structure
-jobpilot-Ai/
-│── job/
-│ ├── templates/ # HTML frontend
-│ ├── hr_email_finder.py # Main Flask app
-│ ├── credentials.json # Google service account (IGNORED in git)
-│ ├── .env # Environment variables (API keys)
-│ ├── hr_emails.csv # Output (IGNORED in git)
-│── requirements.txt
-│── README.md
-│── .gitignore
+<img width="333" height="171" alt="image" src="https://github.com/user-attachments/assets/1be2a2dc-a4be-4602-afa1-162f106c1ef6" />
+
 
 
 ---
