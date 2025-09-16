@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Job Pilot AI</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            background: #f4f6f9; 
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            background: linear-gradient(90deg, #4cafef, #0077ff);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        label { font-weight: bold; }
+        input {
+            width: 300px;
+            padding: 8px;
+            margin: 5px 0 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background: #0077ff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #0056cc;
+        }
+        .progress-container { 
+            margin: 20px 0; 
+            display: none; 
+            text-align: center;
+        }
+        .progress-bar { 
+            width: 0%; 
+            height: 20px; 
+            background: #28a745; 
+            border-radius: 5px;
+            transition: width 0.3s; 
+        }
+        table { 
+            border-collapse: collapse; 
+            width: 100%; 
+            margin-top: 20px; 
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        th { 
+            background: #0077ff; 
+            color: white; 
+            padding: 10px; 
+        }
+        td { 
+            border: 1px solid #ddd; 
+            padding: 8px; 
+        }
+        tr:nth-child(even) { background: #f9f9f9; }
+        a { color: #0077ff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1>🚀 Job Pilot AI</h1>
+    <label>Company Name:</label><br>
+    <input type="text" id="company" placeholder="e.g. Google"><br>
+    
+    <label>Job Role (optional):</label><br>
+    <input type="text" id="job_role" placeholder="e.g. Software Engineer"><br>
+    
+    <button onclick="startSearch()">🔍 Search Jobs</button>
+
+    <div class="progress-container">
+        <p>⏳ Searching... Please wait</p>
+        <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <table id="results-table" style="display:none;">
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Job Role</th>
+                <th>Source URL</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        function startSearch() {
+            const company = document.getElementById("company").value;
+            const job_role = document.getElementById("job_role").value;
+
+            document.querySelector(".progress-container").style.display = "block";
+            document.getElementById("progress-bar").style.width = "0%";
+
+            fetch("/start_search", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({company, job_role})
+            });
+
+            checkProgress();
+        }
+
+        function checkProgress() {
+            fetch("/progress")
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === "searching") {
+                        document.getElementById("progress-bar").style.width = data.progress + "%";
+                        setTimeout(checkProgress, 1000);
+                    } else if (data.status === "done") {
+                        document.getElementById("progress-bar").style.width = "100%";
+                        displayResults(data.results);
+                    }
+                });
+        }
+
+        function displayResults(results) {
+            const table = document.getElementById("results-table");
+            const tbody = table.querySelector("tbody");
+            tbody.innerHTML = "";
+            results.forEach(r => {
+                // r[0] = email, r[1] = source URL, r[2] = job role (if you modify backend to include it)
+                const row = document.createElement("tr");
+                row.innerHTML = `<td>${r[0]}</td><td>${r[2] || '-'}</td><td><a href="${r[1]}" target="_blank">${r[1]}</a></td>`;
+                tbody.appendChild(row);
+            });
+            table.style.display = "table";
+        }
+    </script>
+</body>
+</html>

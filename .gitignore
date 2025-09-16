@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pkl
+*.log
+
+# Virtual environment
+venv/
+.env/
+*.env
+
+# Credentials and API keys
+credentials.json
+*.json
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# IDE/editor files
+.vscode/
+.idea/
+
+# Cache
+*.cache
+*.tmp
+
+# CSV/Output files
+*.csv
